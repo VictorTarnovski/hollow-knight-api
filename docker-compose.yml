@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_HOST=127.0.0.1
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=hollow_knight_db
+      - POSTGRES_USER=higher_being
+      - POSTGRES_PASSWORD=pure_vessel
+    container_name: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
