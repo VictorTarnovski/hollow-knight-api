@@ -240,7 +240,7 @@ func (s *PostgresStore) GetCollectables(filters GetCollectablesFilters) ([]*type
 }
 
 func SliceToCollectableTree(slice []*types.Collectable) *types.Collectable {
-	if len(slice) == 0 || len(slice) == 1 {
+	if len(slice) == 0 {
 		return nil
 	}
 
