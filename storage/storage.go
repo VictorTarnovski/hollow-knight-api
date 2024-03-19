@@ -14,7 +14,7 @@ type GetKingdomsFilters struct {
 
 type GetCollectablesFilters struct {
 	TypeName string
-	ID *string
+	ID       *string
 }
 
 type Storage interface {
@@ -59,10 +59,10 @@ func (s *PostgresStore) GetKingdoms(filters GetKingdomsFilters) ([]*types.Kingdo
 	}
 
 	rows, err := s.db.Query(query, params...)
-
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	kingdoms := []*types.Kingdom{}
 	for rows.Next() {
@@ -90,10 +90,10 @@ func (s *PostgresStore) GetKingdomAreas(kingdomId string) ([]*types.Area, error)
 	`
 
 	rows, err := s.db.Query(query, kingdomId)
-
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	areas := []*types.Area{}
 	for rows.Next() {
@@ -171,13 +171,14 @@ WHERE 1 = 1
   AND collectables.id = $2
 ORDER BY collectable_upgrades.length
 `
+
 func (s *PostgresStore) GetCollectables(filters GetCollectablesFilters) ([]*types.Collectable, error) {
 	if filters.TypeName == "" {
-		return nil, errors.New("Collectable TypeName not informed")
+		return nil, errors.New("collectable typeName not informed")
 	}
 
 	if (filters.TypeName != "Item") && (filters.TypeName != "Spell") && (filters.TypeName != "Nail Art") {
-		return nil, errors.New("Invalid Collectable TypeName")
+		return nil, errors.New("invalid collectable typeName")
 	}
 
 	query := ""
@@ -194,6 +195,7 @@ func (s *PostgresStore) GetCollectables(filters GetCollectablesFilters) ([]*type
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	collectables := []*types.Collectable{}
 	for rows.Next() {
@@ -204,11 +206,12 @@ func (s *PostgresStore) GetCollectables(filters GetCollectablesFilters) ([]*type
 			return nil, err
 		}
 
-		if collectable.HasUpgrade == true && filters.ID == nil {
+		if collectable.HasUpgrade && filters.ID == nil {
 			subRows, err := s.db.Query(collectableSubTreeQuery, collectable.ID)
 			if err != nil {
-				return nil, err	
+				return nil, err
 			}
+			defer subRows.Close()
 			upgrades := []*types.Collectable{}
 			for subRows.Next() {
 				upgrade := &types.Collectable{}
@@ -225,7 +228,7 @@ func (s *PostgresStore) GetCollectables(filters GetCollectablesFilters) ([]*type
 		}
 		collectables = append(collectables, collectable)
 	}
-	
+
 	if len(collectables) != 0 && len(collectables) != 1 {
 		if filters.ID != nil {
 			collectables[0] = SliceToCollectableTree(collectables)
@@ -242,7 +245,7 @@ func SliceToCollectableTree(slice []*types.Collectable) *types.Collectable {
 	}
 
 	for i := len(slice) - 1; i > 0; i-- {
-		slice[i - 1].UpgradesTo = slice[i]
+		slice[i-1].UpgradesTo = slice[i]
 	}
 	return slice[0]
 }

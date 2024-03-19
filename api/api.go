@@ -32,16 +32,16 @@ func (s *APIServer) Run() error {
 	router.HandleFunc("/kingdoms/{id}/map", makeHTTPHandleFunc(s.withKingdom(s.handleKingdoms)))
 
 	/* /items */
-	router.HandleFunc("/items", makeHTTPHandleFunc(s.handleItems))
-	router.HandleFunc("/items/{id}", makeHTTPHandleFunc(s.handleItems))
+	router.HandleFunc("/items", makeHTTPHandleFunc(s.handleCollectables))
+	router.HandleFunc("/items/{id}", makeHTTPHandleFunc(s.handleCollectables))
 
 	/* /spells */
-	router.HandleFunc("/spells", makeHTTPHandleFunc(s.handleSpells))
-	router.HandleFunc("/spells/{id}", makeHTTPHandleFunc(s.handleSpells))
+	router.HandleFunc("/spells", makeHTTPHandleFunc(s.handleCollectables))
+	router.HandleFunc("/spells/{id}", makeHTTPHandleFunc(s.handleCollectables))
 
 	/* /nail-arts */
-	router.HandleFunc("/nail-arts", makeHTTPHandleFunc(s.handleNailArts))
-	router.HandleFunc("/nail-arts/{id}", makeHTTPHandleFunc(s.handleNailArts))
+	router.HandleFunc("/nail-arts", makeHTTPHandleFunc(s.handleCollectables))
+	router.HandleFunc("/nail-arts/{id}", makeHTTPHandleFunc(s.handleCollectables))
 
 	err := http.ListenAndServe(s.listenAddress, router)
 

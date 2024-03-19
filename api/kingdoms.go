@@ -36,7 +36,7 @@ func (s *APIServer) withKingdom(f APIFunc) APIFunc {
 
 func (s *APIServer) handleKingdoms(w http.ResponseWriter, r *http.Request) error {
 	if r.Method == "GET" {
-		getAreas, err := regexp.Match("^/kingdoms/" + "(" + UUIDRegex + ")" + "/map" + "$", []byte(r.URL.Path))
+		getAreas, err := regexp.Match("^/kingdoms/"+"("+UUIDRegex+")"+"/map"+"$", []byte(r.URL.Path))
 		if err != nil {
 			return err
 		}
@@ -64,8 +64,8 @@ func (s *APIServer) handleGETKingdoms(w http.ResponseWriter, r *http.Request) er
 		return err
 	}
 
-	usesId :=  templ == "/kingdoms/{id}"
-	if usesId == true {
+	usesId := templ == "/kingdoms/{id}"
+	if usesId {
 		kingdomId := mux.Vars(r)["id"]
 		filters.ID = &kingdomId
 	}
