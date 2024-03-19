@@ -115,7 +115,7 @@ SELECT DISTINCT
 	collectables.id,
 	collectables.name,
 	collectables.description,
-    	collectable_upgrades.collectable_id IS NOT NULL AS has_upgrade
+  collectable_upgrades.collectable_id IS NOT NULL AS has_upgrade
 FROM collectables
 INNER JOIN collectable_types ON collectable_types.id = collectables.collectable_type_id
 LEFT JOIN collectable_upgrades ON collectable_upgrades.collectable_id = collectables.id
@@ -124,7 +124,7 @@ WHERE 1 = 1
   AND collectables.id not in
     (
      SELECT DISTINCT 
-		collectable_upgrades.upgraded_collectable_id
+		 	collectable_upgrades.upgraded_collectable_id
      FROM collectable_upgrades
      INNER JOIN collectables ON collectables.id = collectable_upgrades.upgraded_collectable_id
      INNER JOIN collectable_types ON collectable_types.id = collectables.collectable_type_id
