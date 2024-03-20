@@ -1,8 +1,8 @@
 package main
 
 import (
-	"log"
 	"fmt"
+	"log"
 
 	"github.com/VictorTarnovski/hollow-knight-api/api"
 	"github.com/VictorTarnovski/hollow-knight-api/storage"
